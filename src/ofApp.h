@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxThreadedImageLoader.h"
+
 class ofApp : public ofBaseApp{
 
 public:
@@ -24,9 +24,15 @@ public:
 		
     //-----------------------------------------
     //Volume Rendering.
-    ofxThreadedImageLoader imageLoader;
     std::vector<ofImage*> images;
     ofDirectory imagesDir;
     
+    //The 3D texture that will hold all the images.
+    GLuint volTexture;
+    
     void loadImages();
+    void prepareTexture();
+    
+private:
+    void preparePixelData(std::vector<char> & pixelData);
 };
