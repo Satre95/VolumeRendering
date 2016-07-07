@@ -1,4 +1,4 @@
 ofxAssimpModelLoader
 ofxFX
 ofxGui
-ofxThreadedImageLoader
+ofxVolumetrics

@@ -35,7 +35,8 @@ public:
     
     ofEasyCam camera;
     ofShader volShader;
-    
+    ofBoxPrimitive cube;
+    ofImage zebra;
 private:
     void preparePixelData(std::vector<char> & pixelData);
 };

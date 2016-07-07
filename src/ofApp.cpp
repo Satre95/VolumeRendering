@@ -6,17 +6,35 @@ void ofApp::setup(){
     prepareTexture();
     ofLogNotice() << glGetString(GL_VERSION);
     
-    volShader.load("Shaders/VolShader.vert", "Shaders/VolShader.frag");
+    volShader.load("Shaders/VolShader");
+    
+    cube.set(10.0f);
+    cube.enableTextures();
+    
+    vector<ofVec3f> & vertices = cube.getMesh().getVertices();
+    zebra.load("zebra.jpg");
+    
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
+    
+    camera.begin();
+//    glBindTexture(GL_TEXTURE_3D, volTexture);
+    zebra.getTexture().bind();
+    cube.draw();
+    
+//    glBindTexture(GL_TEXTURE_3D, 0);
+    camera.end();
+    
 }
 
 //--------------------------------------------------------------
