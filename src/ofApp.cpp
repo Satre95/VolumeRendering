@@ -3,8 +3,10 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     loadImages();
-    
     prepareTexture();
+    ofLogNotice() << glGetString(GL_VERSION);
+    
+    volShader.load("Shaders/VolShader.vert", "Shaders/VolShader.frag");
 }
 
 //--------------------------------------------------------------
@@ -42,6 +44,7 @@ void ofApp::prepareTexture() {
     glEnable(GL_TEXTURE_3D);
     
     glGenTextures(1, &volTexture);
+    glActiveTexture(GL_TEXTURE0);
     
     glBindTexture(GL_TEXTURE_3D, volTexture);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -57,6 +60,8 @@ void ofApp::prepareTexture() {
     
     glBindTexture(GL_TEXTURE_3D, 0);
     
+    volShader.setUniformTexture("volTexture", GL_TEXTURE_3D, volTexture, 0);
+    
 }
 
 void ofApp::preparePixelData(std::vector<char> & pixelData) {
@@ -66,8 +71,6 @@ void ofApp::preparePixelData(std::vector<char> & pixelData) {
         for (int i = 0; i < pixels.size(); i++) {
             char val = pixels[i];
             pixelData.push_back(val);
-            
-//            ofLogNotice() << "Grey Value: " << (int) val;
         }
     }
 }

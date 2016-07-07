@@ -33,6 +33,9 @@ public:
     void loadImages();
     void prepareTexture();
     
+    ofEasyCam camera;
+    ofShader volShader;
+    
 private:
     void preparePixelData(std::vector<char> & pixelData);
 };
