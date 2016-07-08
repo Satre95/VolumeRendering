@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxVolumetrics.h"
 
 class ofApp : public ofBaseApp{
 
@@ -35,8 +36,13 @@ public:
     
     ofEasyCam camera;
     ofShader volShader;
-    ofBoxPrimitive cube;
-    ofImage zebra;
+    ofxImageSequencePlayer imageSequence;
+    ofxVolumetrics headVolume;
+    
+    int volWidth, volHeight, volDepth;
+    
+    std::vector<unsigned char> volData;
+    
 private:
     void preparePixelData(std::vector<char> & pixelData);
 };

@@ -2,20 +2,42 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    loadImages();
-    prepareTexture();
-    ofLogNotice() << glGetString(GL_VERSION);
+//    loadImages();
+//    prepareTexture();
+    ofLogNotice() << "Using OpenGL version: " << glGetString(GL_VERSION);
     
-    volShader.load("Shaders/VolShader");
+    ofSetFrameRate(60);
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    imageSequence.init("Head-Images/head-", 3, ".png", 0);
+    volWidth = imageSequence.getWidth();
+    volHeight = imageSequence.getHeight();
+    volDepth = imageSequence.getSequenceLength();
     
-    cube.set(10.0f);
-    cube.enableTextures();
+    volData = std::vector<unsigned char>(volWidth * volHeight * volDepth * 4);
     
-    vector<ofVec3f> & vertices = cube.getMesh().getVertices();
-    zebra.load("zebra.jpg");
+    for (int z = 0; z < volDepth; z++) {
+        imageSequence.loadFrame(z);
+        
+        for (int x = 0; x < volWidth; x++) {
+            for (int y = 0; y < volHeight; y++) {
+                int pixelIndex = ( ( x + volWidth * y ) + z * volWidth * volHeight ) * 4;
+                int sample = imageSequence.getPixels()[x+y*volWidth];
+                ofColor c(sample);
+                
+                volData[pixelIndex] = c.r;
+                volData[pixelIndex+1] = c.g;
+                volData[pixelIndex+2] = c.b;
+                volData[pixelIndex+3] = sample;
+            }
+        }
+    }
     
+    headVolume.setup(volWidth, volHeight, volDepth, ofVec3f(1,1,2),true);
+    headVolume.updateVolumeData(&volData[0],volWidth,volHeight,volDepth,0,0,0);
+    headVolume.setRenderSettings(1.0, 1.0, 0.75, 0.1);
     
-    
+    camera.setDistance(1000);
+    camera.enableMouseInput();
 }
 
 //--------------------------------------------------------------
@@ -25,15 +47,16 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofClear(0, 0, 0);
+//    ofColor centerColor = ofColor(85, 78, 68);
+    ofColor centerColor(185, 131, 118);
+    ofColor edgeColor(0);
+    ofBackgroundGradient(centerColor, edgeColor, OF_GRADIENT_CIRCULAR);
     
     camera.begin();
-//    glBindTexture(GL_TEXTURE_3D, volTexture);
-    zebra.getTexture().bind();
-    cube.draw();
-    
-//    glBindTexture(GL_TEXTURE_3D, 0);
+    headVolume.drawVolume(0, 0, 0, ofGetHeight(), 0);
     camera.end();
+     
     
 }
 
